@@ -1,0 +1,22 @@
+
+# Python virtual environment
+.venv/
+venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Secret configuration files
+.env
+.env.*
+
+# Large raw datasets
+export.csv
+*.parquet
+
+# Temporary files
+*.tmp
+.DS_Store
+# Power BI report - add after reviewing contents
+LeakGuard.pbix
