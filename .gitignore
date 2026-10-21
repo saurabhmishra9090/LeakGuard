@@ -20,3 +20,6 @@ export.csv
 .DS_Store
 # Power BI report - add after reviewing contents
 LeakGuard.pbix
+# Local backups
+app_backup.js
+app_backup.py

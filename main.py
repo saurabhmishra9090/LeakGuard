@@ -13,7 +13,7 @@ query = """
 WITH cleaned_data AS (
     SELECT
         TRIM(CAST("Voucher" AS VARCHAR)) AS voucher,
-        TRIM("Supplier & Other Non-Supplier Payees") AS supplier,
+        TRIM("Supplier & Other Non-Supplier Payees") AS supplier,pwd
         TRY_CAST(
             REPLACE(TRIM("Vouchers Paid"), ',', '')
             AS DECIMAL(18, 2)
