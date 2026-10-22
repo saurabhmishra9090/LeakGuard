@@ -1407,3 +1407,92 @@ tbody tr:last-child td {
         text-align: left;
     }
 }
+/* Investigation workflow controls */
+.investigation-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+}
+
+.investigation-status-select {
+    width: 100%;
+    max-width: 220px;
+    min-height: 38px;
+    padding: 9px 12px;
+    color: #e5edf8;
+    background: #13283b;
+    border: 1px solid #29445c;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.investigation-status-select:focus {
+    outline: none;
+    border-color: #55b8ff;
+    box-shadow: 0 0 0 3px rgba(85, 184, 255, 0.12);
+}
+
+.investigation-status-select option {
+    color: #e5edf8;
+    background: #13283b;
+}
+
+.investigation-notes {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 280px;
+    min-height: 76px;
+    padding: 10px 12px;
+    color: #e5edf8;
+    background: #0b1c2b;
+    border: 1px solid #29445c;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 12px;
+    line-height: 1.5;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.investigation-notes::placeholder {
+    color: #8198ad;
+}
+
+.investigation-notes:focus {
+    outline: none;
+    border-color: #55b8ff;
+    box-shadow: 0 0 0 3px rgba(85, 184, 255, 0.12);
+}
+
+.save-investigation-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding: 8px 16px;
+    color: #ffffff;
+    background: #1677c8;
+    border: 1px solid #278bdc;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.save-investigation-btn:hover {
+    background: #2089df;
+    border-color: #55b8ff;
+}
+
+.save-investigation-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}

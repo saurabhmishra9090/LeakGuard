@@ -392,11 +392,58 @@ function renderCharts(data) {
 
 /* ---------- SUPPLIER REVIEW TABLE ---------- */
 
+
+function populateFilterOptions(records) {
+    const supplierFilter = $("#supplierFilter");
+    const departmentFilter = $("#departmentFilter");
+
+    if (!supplierFilter || !departmentFilter) return;
+
+    const selectedSupplier = supplierFilter.value;
+    const selectedDepartment = departmentFilter.value;
+
+    const suppliers = [...new Set(
+        records
+            .map(record => String(record.supplier ?? record.supplier_name ?? "").trim())
+            .filter(Boolean)
+    )].sort((a, b) => a.localeCompare(b));
+
+    const departments = [...new Set(
+        records.flatMap(record =>
+            String(record.departments ?? record.department ?? "")
+                .split("|")
+                .map(value => value.trim())
+                .filter(Boolean)
+        )
+    )].sort((a, b) => a.localeCompare(b));
+
+    supplierFilter.innerHTML =
+        '<option value="all">All suppliers</option>' +
+        suppliers.map(supplier =>
+            `<option value="${escapeHTML(supplier)}">${escapeHTML(supplier)}</option>`
+        ).join("");
+
+    departmentFilter.innerHTML =
+        '<option value="all">All departments</option>' +
+        departments.map(department =>
+            `<option value="${escapeHTML(department)}">${escapeHTML(department)}</option>`
+        ).join("");
+
+    if (suppliers.includes(selectedSupplier)) {
+        supplierFilter.value = selectedSupplier;
+    }
+
+    if (departments.includes(selectedDepartment)) {
+        departmentFilter.value = selectedDepartment;
+    }
+}
+
 function renderTable(data) {
     const table = $("#reviewTable");
     if (!table) return;
 
     const records = Array.isArray(data.review_records) ? data.review_records : [];
+    populateFilterOptions(records);
     const searchTerm = state.search.trim().toLowerCase();
 
     const filtered = records.filter(record => {
@@ -414,12 +461,32 @@ function renderTable(data) {
 
         const count = Number(record.repeated_rows) || 0;
         const matchesSearch = !searchTerm || searchable.includes(searchTerm);
-        const matchesFilter =
-            state.filter === "all" ||
-            (state.filter === "high" && count >= 10) ||
-            (state.filter === "other" && count < 10);
+       
+const matchesFilter =
+    state.filter === "all" ||
+    (state.filter === "high" && count >= 10) ||
+    (state.filter === "other" && count < 10);
 
-        return matchesSearch && matchesFilter;
+const supplierFilter = $("#supplierFilter");
+const departmentFilter = $("#departmentFilter");
+
+const selectedSupplier = supplierFilter ? supplierFilter.value : "all";
+const selectedDepartment = departmentFilter ? departmentFilter.value : "all";
+
+const recordSupplier = String(record.supplier ?? record.supplier_name ?? "").trim();
+
+const recordDepartments = String(record.departments ?? record.department ?? "")
+    .split("|")
+    .map(value => value.trim());
+
+const matchesSupplier =
+    selectedSupplier === "all" || recordSupplier === selectedSupplier;
+
+const matchesDepartment =
+    selectedDepartment === "all" || recordDepartments.includes(selectedDepartment);
+
+return matchesSearch && matchesFilter && matchesSupplier && matchesDepartment;
+
     });
 
     const visibleRows = state.showAll ? filtered : filtered.slice(0, 6);
@@ -441,17 +508,50 @@ function renderTable(data) {
         const supplier = escapeHTML(record.supplier || record.supplier_name || "Unknown supplier");
         const voucher = escapeHTML(record.voucher || record.purchase_order || `LG-${String(index + 1).padStart(3, "0")}`);
         const count = Number(record.repeated_rows) || 0;
-        const statusText = count >= 10 ? "Priority review" : "Review";
-        const statusClass = count >= 10 ? "" : " review";
+       const statusText = record.status || (count >= 10 ? "Priority review" : "Review");
+const statusClass = record.status ? " investigation-status" : (count >= 10 ? "" : " review");
 
         return `
-            <tr>
-                <td><div class="supplier-name" title="${supplier}">${supplier}</div></td>
-                <td><span class="row-id" title="${voucher}">${voucher}</span></td>
-                <td><span class="count-value">${formatNumber(count)}</span></td>
-                <td><span class="status-badge${statusClass}">${statusText}</span></td>
-            </tr>
-        `;
+    <tr>
+        <td>
+            <div class="supplier-name" title="${supplier}">${supplier}</div>
+        </td>
+        <td>
+            <span class="row-id">${voucher}</span>
+        </td>
+        <td>
+            <span class="count-value">${formatNumber(count)}</span>
+        </td>
+        <td>
+            <div class="investigation-controls">
+                <select
+                    class="investigation-status-select"
+                    data-id="${record.investigation_id}"
+                    aria-label="Investigation status"
+                >
+                    <option value="Pending review" ${record.status === "Pending review" ? "selected" : ""}>Pending review</option>
+                    <option value="Under investigation" ${record.status === "Under investigation" ? "selected" : ""}>Under investigation</option>
+                    <option value="Cleared" ${record.status === "Cleared" ? "selected" : ""}>Cleared</option>
+                    <option value="Escalated" ${record.status === "Escalated" ? "selected" : ""}>Escalated</option>
+                </select>
+
+                <textarea
+                    class="investigation-notes"
+                    data-id="${record.investigation_id}"
+                    placeholder="Add investigation notes..."
+                    aria-label="Investigation notes"
+                    rows="2"
+                >${record.notes || ""}</textarea>
+
+                <button
+                    type="button"
+                    class="save-investigation-btn"
+                    data-id="${record.investigation_id}"
+                >Save</button>
+            </div>
+        </td>
+    </tr>
+`;
     }).join("");
 }
 
@@ -548,7 +648,7 @@ function answerDataQuestion(question) {
 
 /* ---------- USER INTERACTIONS ---------- */
 
-function setupInteractions() {
+function setupInteractions() {1
     const searchInput = $("#globalSearch");
 
     if (searchInput) {
@@ -566,6 +666,23 @@ function setupInteractions() {
             renderTable(state.data || {});
         });
     }
+    
+const supplierFilter = $("#supplierFilter");
+if (supplierFilter) {
+    supplierFilter.addEventListener("change", () => {
+        state.showAll = false;
+        renderTable(state.data || {});
+    });
+}
+
+const departmentFilter = $("#departmentFilter");
+if (departmentFilter) {
+    departmentFilter.addEventListener("change", () => {
+        state.showAll = false;
+        renderTable(state.data || {});
+    });
+}
+
 
     const clearSearchButton = $("#clearSearch");
 
@@ -573,6 +690,8 @@ function setupInteractions() {
         clearSearchButton.addEventListener("click", () => {
             state.search = "";
             state.filter = "all";
+            if (supplierFilter) supplierFilter.value = "all";
+            if (departmentFilter) departmentFilter.value = "all";
             state.showAll = false;
 
             if (searchInput) {
@@ -648,6 +767,61 @@ function setupInteractions() {
             );
         });
     });
+       document.addEventListener("click", async (event) => {
+    const button = event.target.closest(".save-investigation-btn");
+
+    if (!button) return;
+
+    const id = button.dataset.id;
+    const row = button.closest("tr");
+
+    if (!id || !row) {
+        showToast("Investigation row not found.");
+        return;
+    }
+
+    const statusSelect = row.querySelector(".investigation-status-select");
+    const notesInput = row.querySelector(".investigation-notes");
+
+    if (!statusSelect || !notesInput) {
+        showToast("Status or notes field not found.");
+        return;
+    }
+
+    const originalText = button.textContent;
+
+    button.disabled = true;
+    button.textContent = "Saving...";
+
+    try {
+        const response = await fetch(`/api/investigations/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                status: statusSelect.value,
+                notes: notesInput.value
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || "Unable to save investigation.");
+        }
+
+        showToast("Investigation saved successfully.");
+        await loadDashboard();
+
+    } catch (error) {
+        console.error("Save investigation error:", error);
+        showToast(error.message || "Failed to save investigation.");
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+});
 }
 
 

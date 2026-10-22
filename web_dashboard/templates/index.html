@@ -113,7 +113,15 @@
             <section class="lower-grid">
                 <article class="panel table-panel" id="reviews">
                     <div class="panel-heading table-heading"><div><div class="panel-kicker">INVESTIGATION QUEUE</div><h2>Recent review candidates</h2><p>Potential anomalies requiring human validation</p></div><button class="text-button" id="clearSearch">Clear search ↗</button></div>
-                    <div class="table-tools"><span id="resultCount">Loading records…</span><select id="riskFilter" aria-label="Filter records"><option value="all">All review groups</option><option value="high">Higher-volume groups</option><option value="other">Other groups</option></select></div>
+                    <div class="table-tools"><span id="resultCount">Loading records…</span><select id="riskFilter" aria-label="Filter records"><option value="all">All review groups</option><option value="high">Higher-volume groups</option><option value="other">Other groups</option></select>
+<select id="supplierFilter" aria-label="Filter by supplier">
+    <option value="all">All suppliers</option>
+</select>
+
+<select id="departmentFilter" aria-label="Filter by department">
+    <option value="all">All departments</option>
+</select>
+</div>
                     <div class="table-scroll"><table><thead><tr><th>SUPPLIER</th><th>REVIEW GROUP</th><th>REPEATED ROWS</th><th>STATUS</th></tr></thead><tbody id="reviewTable"><tr><td colspan="4" class="empty-state">Loading report data…</td></tr></tbody></table></div>
                     <div class="table-foot"><span>Flags indicate review priority, not confirmed fraud.</span><button id="showMore" class="text-button">Show all rows ↓</button></div>
                 </article>
