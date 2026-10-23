@@ -75,8 +75,8 @@ select:focus-visible {
 }
 
 .brand-mark {
-    width: 39px;
-    height: 39px;
+    width: 48px;
+    height: 48px; 
     border-radius: 11px;
     display: grid;
     place-items: center;
@@ -86,6 +86,15 @@ select:focus-visible {
     font-weight: 800;
     letter-spacing: -2px;
     box-shadow: 0 5px 22px #078bfa30;
+}
+
+.brand-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: inherit;
+    filter: drop-shadow(0 0 6px rgba(21, 155, 255, 0.35));
 }
 
 .brand-mark span {
@@ -513,14 +522,26 @@ select:focus-visible {
     padding: 17px 17px 15px;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--panel);
-    transition: transform .2s ease, border-color .2s ease;
+    background: linear-gradient(
+        145deg,
+         rgba(255, 255, 255, 0.035),
+        transparent 65%
+    ), var(--panel);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+    transition: transform 0.2s ease, border-color 0.2s ease,
+                box-shadow 0.2s ease;
 }
 
+
 .kpi-card:hover {
-    transform: translateY(-2px);
-    border-color: #35556c;
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.65);
+    box-shadow:
+        0 0 0 1px rgba(56, 189, 248, 0.08),
+        0 8px 28px rgba(0, 0, 0, 0.25),
+        0 0 22px rgba(56, 189, 248, 0.10);
 }
+
 
 .kpi-card.blue {
     background: linear-gradient(125deg, #102b43, #0d1e2e 75%);
@@ -586,6 +607,16 @@ select:focus-visible {
     font-variant-numeric: tabular-nums;
 }
 
+.kpi-value {
+    text-shadow: 0 0 18px rgba(226, 232, 240, 0.08);
+    transition: text-shadow 0.25s ease;
+}
+
+.kpi-card:hover .kpi-value {
+    text-shadow: 0 0 22px rgba(56, 189, 248, 0.22);
+}
+
+
 .kpi-bottom {
     display: flex;
     align-items: center;
@@ -626,9 +657,17 @@ select:focus-visible {
     width: 4px;
     height: 35%;
     border-radius: 2px 2px 0 0;
-    background: #218ef0;
+    background: #f28c28;
+    box-shadow: 0 0 5px rgba(242, 140, 40, 0.18);
+    transition: height 0.25s ease, opacity 0.25s ease;
+    
+.kpi-card:hover .mini-bars i {
+    opacity: 1;
+    box-shadow: 0 0 9px currentColor;
+    transform: scaleY(1.08);
+    transform-origin: bottom;
 }
-
+}
 .mini-bars i:nth-child(2n) {
     height: 60%;
 }
@@ -641,16 +680,24 @@ select:focus-visible {
     height: 45%;
 }
 
+.blue .mini-bars i {
+    background: #218ef0;
+    box-shadow: 0 0 5px rgba(33, 142, 240, 0.2);
+}
+
 .wine .mini-bars i {
     background: #d95870;
+    box-shadow: 0 0 5px rgba(217, 88, 112, 0.2);
 }
 
 .cyan .mini-bars i {
     background: #1cc5d9;
+    box-shadow: 0 0 5px rgba(28, 197, 217, 0.2);
 }
 
 .amber .mini-bars i {
     background: #e9a33e;
+    box-shadow: 0 0 5px rgba(233, 163, 62, 0.2);
 }
 
 /* CHART PANELS */
@@ -1583,3 +1630,259 @@ td {
     background: rgba(34, 197, 94, 0.14);
     border-color: rgba(34, 197, 94, 0.35);
 }
+
+/* LeakGuard professional hero banner */
+
+/* LeakGuard professional hero banner */
+.leakguard-hero-banner {
+    width: 100%;
+    margin: 0 0 24px;
+    overflow: hidden;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 14px;
+    background: #081625;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+}
+
+.hero-banner-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 230px;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media (max-width: 768px) {
+    .hero-banner-image {
+        max-height: 160px;
+        object-fit: cover;
+    }
+}
+
+/* Supplier Payment Distribution chart */
+.supplier-chart-card {
+    width: 100%;
+    margin: 0 0 24px;
+    padding: 24px;
+    box-sizing: border-box;
+    background: linear-gradient(145deg, #0d2032, #091725);
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.chart-card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.chart-card-heading h3 {
+    margin: 0 0 6px;
+    color: #edf6ff;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.chart-card-heading p {
+    margin: 0;
+    color: #91a9bd;
+    font-size: 12px;
+}
+
+.chart-period {
+    color: #8bdcff;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.supplier-chart-container {
+    position: relative;
+    width: 100%;
+    height: 320px;
+}
+
+@media (max-width: 768px) {
+    .supplier-chart-card {
+        padding: 16px;
+    }
+
+    .chart-card-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .supplier-chart-container {
+        height: 280px;
+    }
+}
+
+/* ===== LEAKGUARD INTELLIGENCE BANNER ===== */
+
+.intelligence-banner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 125px;
+    margin-bottom: 20px;
+    padding: 20px 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 126, 24, 0.22);
+    border-radius: 15px;
+    background:
+        radial-gradient(ellipse at 8% 50%, rgba(255, 126, 24, 0.12), transparent 35%),
+        linear-gradient(110deg, #111b2b 0%, #0b1727 55%, #101a29 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+.intelligence-banner::after {
+    content: "";
+    position: absolute;
+    top: -80px;
+    right: 12%;
+    width: 320px;
+    height: 220px;
+    border: 1px solid rgba(255, 126, 24, 0.07);
+    border-radius: 50%;
+    transform: rotate(-20deg);
+    pointer-events: none;
+}
+
+.banner-brand {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.banner-shield {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 78px;
+    height: 82px;
+    color: #ff901f;
+    font-size: 72px;
+    line-height: 1;
+    text-shadow: 0 0 12px rgba(255, 126, 24, 0.35);
+}
+
+.banner-title h2 {
+    margin: 0 0 7px;
+    color: #f2f6fc;
+    font-size: clamp(21px, 2vw, 30px);
+    font-weight: 750;
+    letter-spacing: -0.7px;
+}
+
+.banner-title h2 span {
+    color: #ff922b;
+}
+
+.banner-title p {
+    margin: 0;
+    color: #a7bdd2;
+    font-size: 15px;
+    letter-spacing: 0.2px;
+}
+
+.banner-features {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.banner-feature {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 7px 20px;
+    color: #e5edf7;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.banner-feature + .banner-feature {
+    border-left: 1px solid rgba(137, 164, 190, 0.22);
+}
+
+
+.feature-icon {
+    color: #ff9a2e;
+    font-size: 29px;
+    line-height: 1;
+    background: linear-gradient(
+        145deg,
+        #ffdc8a 0%,
+        #ffab3d 38%,
+        #ff7900 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 3px rgba(255, 153, 46, 0.3));
+}
+
+
+@media (max-width: 900px) {
+    .intelligence-banner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .banner-features {
+        flex-wrap: wrap;
+    }
+
+    .banner-feature {
+        padding-left: 0;
+        padding-right: 14px;
+    }
+}
+
+@media (max-width: 520px) {
+    .intelligence-banner {
+        padding: 18px;
+    }
+
+    
+.banner-shield {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 78px;
+    height: 82px;
+}
+
+.shield-icon {
+    display: block;
+    width: 62px;
+    height: 70px;
+    overflow: visible;
+    filter: drop-shadow(0 0 5px rgba(255, 138, 28, 0.45));
+}
+
+
+    .banner-brand {
+        gap: 12px;
+    }
+
+    .banner-title p {
+        font-size: 12px;
+    }
+
+    .banner-feature {
+        font-size: 11px;
+    }
+}
+

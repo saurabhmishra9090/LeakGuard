@@ -14,7 +14,9 @@
 <div class="app-shell">
     <aside class="sidebar">
         <div class="brand">
-            <div class="brand-mark">L<span>G</span></div>
+           <div class="brand-mark">
+    <img src="{{ url_for('static', filename='IMAGES/leakguard-logo.png') }}" alt="LeakGuard logo">
+</div>
             <div><strong>LeakGuard</strong><small>PAYMENT INTELLIGENCE</small></div>
         </div>
 
@@ -55,6 +57,16 @@
 
         <section class="page-content">
             <div class="page-heading">
+            
+            
+<div class="leakguard-hero-banner">
+    <img
+        class="hero-banner-image"
+        src="{{ url_for('static', filename='IMAGES/leakguard-hero.png') }}"
+        alt="LeakGuard Payment Intelligence banner"
+    >
+</div>
+    
                 <div><div class="eyebrow"><span class="live-dot"></span> PAYMENT INTEGRITY RADAR</div>
                     <h1>Good afternoon, Analyst <span class="wave">✳</span></h1>
                     <p>Monitor payment anomalies, investigate risk signals, and protect financial integrity.</p>
@@ -72,6 +84,55 @@
                 <div class="status-left"><span class="live-dot"></span><strong>Analysis environment</strong><span class="status-divider">/</span><span>Connected to local investigation reports</span></div>
                 <span class="status-time" id="lastUpdated">Awaiting data</span>
             </div>
+            
+<section class="intelligence-banner">
+    <div class="banner-brand">
+        
+<div class="banner-shield">
+    <svg viewBox="0 0 64 72" class="shield-icon" aria-hidden="true">
+        <path d="M32 4 L56 15 V34 C56 49 46 60 32 68 C18 60 8 49 8 34 V15 Z"
+              fill="#172337"
+              stroke="#ff8a1c"
+              stroke-width="4"
+              stroke-linejoin="round"/>
+        <path d="M32 15 L45 22 V34 C45 43 39 50 32 55 Z"
+              fill="#ff9a2e"
+              opacity="0.95"/>
+        <path d="M32 15 L19 22 V34 C19 43 25 50 32 55 Z"
+              fill="#ffbd59"
+              opacity="0.9"/>
+        <path d="M32 15 L32 55"
+              stroke="#ffe0a3"
+              stroke-width="1.5"
+              opacity="0.8"/>
+    </svg>
+</div>
+
+
+        <div class="banner-title">
+            <h2>Supplier Payment <span>Intelligence</span></h2>
+            <p>Track. Analyze. Prevent Leakage.</p>
+        </div>
+    </div>
+
+    <div class="banner-features">
+        <div class="banner-feature">
+            <span class="feature-icon">♢</span>
+            <span>Detect<br>Anomalies</span>
+        </div>
+
+        <div class="banner-feature">
+            <span class="feature-icon">▥</span>
+            <span>Monitor<br>Supplier Risk</span>
+        </div>
+
+        <div class="banner-feature">
+            <span class="feature-icon">◎</span>
+            <span>Optimize<br>Procurement</span>
+        </div>
+    </div>
+</section>
+
 
             <section class="kpi-grid">
                 <article class="kpi-card blue">
@@ -127,6 +188,20 @@
             <p>Share of reviewed payment amount</p>
         </article>
     </div>
+
+<div class="supplier-chart-card">
+    <div class="chart-card-heading">
+        <div>
+            <h3>Supplier Payment Distribution</h3>
+            <p>Compare total payments across suppliers</p>
+        </div>
+        <span class="chart-period">All reviewed data</span>
+    </div>
+
+    <div class="supplier-chart-container">
+        <canvas id="supplierPaymentExposureChart"></canvas>
+    </div>
+</div>
 
     <div class="exposure-table-wrapper">
         <h3>Supplier payment summary</h3>

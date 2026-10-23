@@ -92,6 +92,8 @@ async function loadDashboard() {
         const data = await response.json();
 
         state.data = data;
+        console.log("Dashboard data loaded:", data.review_records?.length);
+        console.log("Review records type:", Array.isArray(data.review_records));
 
         renderKPIs(data);
         renderCharts(data);
@@ -111,6 +113,7 @@ async function loadDashboard() {
 
     } catch (error) {
         console.error("Dashboard loading error:", error);
+        console.error("Error details:", error?.stack);
 
         const table = $("#reviewTable");
 
@@ -450,6 +453,67 @@ function renderCharts(data) {
                         border: {
                             display: false
                         }
+                    }
+                }
+            }
+        });
+    }
+        const paymentCanvas = $("#supplierPaymentExposureChart");
+
+    if (paymentCanvas) {
+        new Chart(paymentCanvas, {
+            type: "bar",
+            data: {
+                labels: (data.supplier_payment_summary || [])
+                    .slice(0, 8)
+                    .map(item => item.supplier),
+
+                datasets: [{
+                    label: "Total payment ($)",
+                    data: (data.supplier_payment_summary || [])
+                        .slice(0, 8)
+                        .map(item => Number(item.total_payment) || 0),
+                   backgroundColor: (context) =>
+                   context.dataIndex === 0 ? "#F59E0B" : "#D97706",
+                   hoverBackgroundColor: "#FDBA4A",
+                   borderColor: (context) =>
+                   context.dataIndex === 0 ? "#FCD34D" : "#D97706",
+                   borderWidth: (context) =>
+                   context.dataIndex === 0 ? 2 : 0,
+                   borderRadius: 5,
+                   barPercentage: 0.75,
+                  categoryPercentage: 0.8
+
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: context =>
+                                "$" + context.parsed.x.toLocaleString("en-US", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: "#8fa7ba",
+                            callback: value => "$" + Number(value).toLocaleString("en-US")
+                        },
+                        grid: { color: "#1b3042" }
+                    },
+                    y: {
+                        ticks: { color: "#bdcddd" },
+                        grid: { display: false }
                     }
                 }
             }
