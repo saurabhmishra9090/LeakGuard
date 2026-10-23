@@ -130,8 +130,9 @@ def dashboard_data():
     investigation_statuses = {
     (voucher, supplier): {
         "id": investigation_id,
-        "status": status,
-        "notes": notes
+       "status": status,
+       "notes": notes,
+       "departments": ""
     }
     for investigation_id, voucher, supplier, status, notes in investigation_rows
 }
@@ -156,7 +157,42 @@ def dashboard_data():
                     record["status"] = saved["status"]
                     record["notes"] = saved["notes"]
                     record["investigation_id"] = saved["id"]
+                    record["departments"] = str(
+                    record.get("departments", record.get("department", ""))
+)
+            # Risk scoring starts here
+            try:
+                repeated_rows = int(record.get("repeated_rows", 0) or 0)
+            except (ValueError, TypeError):
+                repeated_rows = 0
+            try:
+                department_count = int(record.get("department_count", 0) or 0)
+            except (ValueError, TypeError):
+                department_count = 0
+            risk_score = 0
 
+            if repeated_rows >= 10:
+                risk_score += 50
+            elif repeated_rows >= 5:
+                risk_score += 30
+            elif repeated_rows >= 3:
+                risk_score += 15
+
+            if department_count >= 3:
+                risk_score += 30
+            elif department_count == 2:
+                risk_score += 15
+
+            if risk_score >= 45:
+             risk_priority = "High"
+            elif risk_score >= 30:
+             risk_priority = "Medium"
+            else:
+             risk_priority = "Low"
+
+            record["risk_score"] = risk_score
+            record["risk_priority"] = risk_priority
+                    
             review_records.append(record)                    
             
 
@@ -169,6 +205,35 @@ def dashboard_data():
         if "repeated_rows" in review_df.columns
         else 0
     )
+    supplier_payment_summary = []
+
+    if not review_df.empty and "supplier" in review_df.columns and "paid_amount" in review_df.columns:
+        payment_data = review_df.copy()
+        payment_data["paid_amount"] = pd.to_numeric(
+            payment_data["paid_amount"], errors="coerce"
+        ).fillna(0)
+
+        supplier_totals = (
+            payment_data.groupby("supplier")["paid_amount"]
+            .agg(["count", "sum", "mean", "max"])
+            .sort_values("sum", ascending=False)
+        )
+
+        total_reviewed_payments = float(supplier_totals["sum"].sum())
+
+        for supplier_name, row in supplier_totals.iterrows():
+            supplier_payment_summary.append({
+                "supplier": str(supplier_name),
+                "record_count": int(row["count"]),
+                "total_payment": round(float(row["sum"]), 2),
+                "average_payment": round(float(row["mean"]), 2),
+                "maximum_payment": round(float(row["max"]), 2),
+                "payment_share_pct": round(
+                    float(row["sum"]) / total_reviewed_payments * 100, 2
+                ) if total_reviewed_payments else 0
+            })
+    else:
+        total_reviewed_payments = 0
 
     return jsonify({
         "review_candidates": int(len(review_df)),
@@ -181,6 +246,8 @@ def dashboard_data():
         "supplier_ranking": suppliers,
         "review_records": review_records,
         "department_summary": departments,
+        "total_reviewed_payments": total_reviewed_payments,
+        "supplier_payment_summary": supplier_payment_summary,
         "reports_found": {
             "cross_department_review": not review_df.empty,
             "department_summary": not department_df.empty,

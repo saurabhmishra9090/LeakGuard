@@ -96,6 +96,7 @@ async function loadDashboard() {
         renderKPIs(data);
         renderCharts(data);
         renderTable(data);
+        renderSupplierPayments(data);
         renderConnectionStatus(data);
 
         const updated = $("#lastUpdated");
@@ -175,8 +176,75 @@ function renderKPIs(data) {
 
     setText("#reportsAvailable", `${availableCount}/2`);
 }
+function formatCurrency(value) {
+    return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+}
+/* -------- SUPPLIER PAYMENT SUMMARY -------- */
 
+function renderSupplierPayments(data) {
+    const table = $("#supplierPaymentTable");
+    if (!table) return;
 
+    const suppliers = Array.isArray(data.supplier_payment_summary)
+        ? data.supplier_payment_summary
+        : [];
+    console.log("Supplier payment data:", suppliers.length, suppliers);
+
+    if (suppliers.length === 0) {
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="empty-state">
+                    No supplier payment data available.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    const totalPayments = Number(data.total_reviewed_payments) || 0;
+
+    const topSupplier = suppliers[0];
+    const topFiveShare = suppliers
+        .slice(0, 5)
+        .reduce((sum, supplier) => sum + (Number(supplier.payment_share_pct) || 0), 0);
+
+    const totalElement = $("#totalReviewedPayments");
+    const topSupplierElement = $("#topPaymentSupplier");
+    const topPaymentElement = $("#topSupplierPayment");
+    const topFiveElement = $("#topFiveShare");
+
+    if (totalElement) {
+        totalElement.textContent = formatCurrency(totalPayments);
+    }
+
+    if (topSupplierElement) {
+        topSupplierElement.textContent = topSupplier.supplier;
+    }
+
+    if (topPaymentElement) {
+        topPaymentElement.textContent = formatCurrency(topSupplier.total_payment);
+    }
+
+    if (topFiveElement) {
+        topFiveElement.textContent = `${topFiveShare.toFixed(2)}%`;
+    }
+
+    table.innerHTML = suppliers.map(supplier => `
+        <tr>
+            <td>${escapeHTML(supplier.supplier)}</td>
+            <td>${formatNumber(supplier.record_count)}</td>
+            <td>${formatCurrency(supplier.total_payment)}</td>
+            <td>${formatCurrency(supplier.average_payment)}</td>
+            <td>${formatCurrency(supplier.maximum_payment)}</td>
+            <td>${Number(supplier.payment_share_pct || 0).toFixed(2)}%</td>
+        </tr>
+    `).join("");
+}
 /* ---------- REPORT CONNECTION STATUS ---------- */
 
 function renderConnectionStatus(data) {
@@ -469,7 +537,8 @@ const matchesFilter =
 
 const supplierFilter = $("#supplierFilter");
 const departmentFilter = $("#departmentFilter");
-
+const priorityFilter = $("#priorityFilter");
+const selectedPriority = priorityFilter ? priorityFilter.value : "all";
 const selectedSupplier = supplierFilter ? supplierFilter.value : "all";
 const selectedDepartment = departmentFilter ? departmentFilter.value : "all";
 
@@ -485,7 +554,11 @@ const matchesSupplier =
 const matchesDepartment =
     selectedDepartment === "all" || recordDepartments.includes(selectedDepartment);
 
-return matchesSearch && matchesFilter && matchesSupplier && matchesDepartment;
+const matchesPriority =
+    selectedPriority === "all" ||
+    String(record.risk_priority || "Low").toLowerCase() === selectedPriority.toLowerCase();
+
+return matchesSearch && matchesFilter && matchesSupplier && matchesDepartment && matchesPriority;
 
     });
 
@@ -510,6 +583,8 @@ return matchesSearch && matchesFilter && matchesSupplier && matchesDepartment;
         const count = Number(record.repeated_rows) || 0;
        const statusText = record.status || (count >= 10 ? "Priority review" : "Review");
 const statusClass = record.status ? " investigation-status" : (count >= 10 ? "" : " review");
+        const riskPriority = record.risk_priority || "Low";
+        const riskClass = riskPriority.toLowerCase();
 
         return `
     <tr>
@@ -550,6 +625,11 @@ const statusClass = record.status ? " investigation-status" : (count >= 10 ? "" 
                 >Save</button>
             </div>
         </td>
+                    <td>
+                <span class="risk-badge ${riskClass}">
+                    ${riskPriority}
+                </span>
+            </td>
     </tr>
 `;
     }).join("");
@@ -682,6 +762,14 @@ if (departmentFilter) {
         renderTable(state.data || {});
     });
 }
+const priorityFilter = $("#priorityFilter");
+
+if (priorityFilter) {
+    priorityFilter.addEventListener("change", () => {
+        state.showAll = false;
+        renderTable(state.data || {});
+    });
+}
 
 
     const clearSearchButton = $("#clearSearch");
@@ -730,6 +818,14 @@ if (departmentFilter) {
     if (exportButton) {
         exportButton.addEventListener("click", exportSupplierReport);
     }
+    const detailedExportButton = $("#detailedExportBtn");
+
+if (detailedExportButton) {
+    detailedExportButton.addEventListener(
+        "click",
+        exportInvestigationDetails
+    );
+}
 
     const chatForm = $("#chatForm");
     const chatInput = $("#chatInput");
@@ -869,6 +965,62 @@ function exportSupplierReport() {
     URL.revokeObjectURL(url);
 
     showToast("Supplier review CSV exported.");
+}
+/* -------- DETAILED INVESTIGATION CSV EXPORT -------- */
+
+function exportInvestigationDetails() {
+    const data = state.data;
+
+    if (!data || !Array.isArray(data.review_records)) {
+        showToast("No investigation data available to export.");
+        return;
+    }
+
+    const headers = [
+        "Voucher",
+        "Supplier",
+        "Repeated Rows",
+        "Departments",
+        "Investigation Status",
+        "Investigation Notes"
+    ];
+
+    const rows = data.review_records.map(record => [
+        record.voucher ?? "",
+        record.supplier ?? record.supplier_name ?? "",
+        record.repeated_rows ?? "",
+        record.departments ?? record.department ?? "",
+        record.status ?? "Pending review",
+        record.notes ?? ""
+    ]);
+
+    const escapeCsvValue = value => {
+        const text = String(value ?? "");
+        return `"${text.replace(/"/g, '""')}"`;
+    };
+
+    const csv = [headers, ...rows]
+        .map(row => row.map(escapeCsvValue).join(","))
+        .join("\r\n");
+
+    const blob = new Blob(
+        ["\uFEFF" + csv],
+        { type: "text/csv;charset=utf-8;" }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "leakguard_investigation_details.csv";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+
+    showToast("Investigation details CSV exported.");
 }
 
 

@@ -24,3 +24,12 @@ LeakGuard.pbix
 app_backup.js
 app_backup.py
 leakguard.db
+# Python environment and test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3

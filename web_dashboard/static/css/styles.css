@@ -1387,9 +1387,9 @@ tbody tr:last-child td {
     }
 
     th,
-    td {
-        padding: 11px 9px;
-    }
+td {
+    padding: 8px 9px;
+}
 
     .table-foot {
         align-items: flex-start;
@@ -1412,20 +1412,22 @@ tbody tr:last-child td {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 5px;
     min-width: 0;
     width: 100%;
+    max-width: 240px;
 }
+
 
 .investigation-status-select {
     width: 100%;
-    max-width: 220px;
-    min-height: 38px;
-    padding: 9px 12px;
+    max-width: 200px;
+    min-height: 34px;
+    padding: 6px 10px;
     color: #e5edf8;
     background: #13283b;
     border: 1px solid #29445c;
-    border-radius: 8px;
+    border-radius: 7px;
     font: inherit;
     font-size: 12px;
     cursor: pointer;
@@ -1446,16 +1448,16 @@ tbody tr:last-child td {
     display: block;
     width: 100%;
     min-width: 0;
-    max-width: 280px;
-    min-height: 76px;
-    padding: 10px 12px;
+    max-width: 240px;
+    min-height: 58px;
+    padding: 8px 10px;
     color: #e5edf8;
     background: #0b1c2b;
     border: 1px solid #29445c;
-    border-radius: 8px;
+    border-radius: 7px;
     font-family: inherit;
     font-size: 12px;
-    line-height: 1.5;
+    line-height: 1.4;
     resize: vertical;
     box-sizing: border-box;
 }
@@ -1474,14 +1476,14 @@ tbody tr:last-child td {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 34px;
-    padding: 8px 16px;
+    min-height: 30px;
+    padding: 6px 12px;
     color: #ffffff;
     background: #1677c8;
     border: 1px solid #278bdc;
-    border-radius: 7px;
+    border-radius: 6px;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease;
@@ -1495,4 +1497,89 @@ tbody tr:last-child td {
 .save-investigation-btn:disabled {
     opacity: 0.6;
     cursor: wait;
+}
+/* Compact investigation row controls */
+.investigation-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.investigation-status-select {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+}
+
+.investigation-notes {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none;
+    min-height: 48px;
+}
+
+.save-investigation-btn {
+    min-height: 28px;
+    padding: 5px 10px;
+    font-size: 11px;
+}
+/* Keep investigation controls compact */
+.investigation-controls .save-investigation-btn {
+    width: fit-content;
+    min-width: 64px;
+    justify-self: start;
+}
+
+.investigation-controls .investigation-status-select {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.investigation-controls .save-investigation-btn {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.investigation-controls .investigation-notes {
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+.investigation-controls .investigation-notes {
+    min-height: 42px;
+    height: 42px;
+    padding: 7px 9px;
+    line-height: 1.35;
+}
+/* Risk priority badges */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border: 1px solid transparent;
+}
+
+.risk-badge.high {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.14);
+    border-color: rgba(239, 68, 68, 0.35);
+}
+
+.risk-badge.medium {
+    color: #fcd34d;
+    background: rgba(245, 158, 11, 0.14);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.risk-badge.low {
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.14);
+    border-color: rgba(34, 197, 94, 0.35);
 }

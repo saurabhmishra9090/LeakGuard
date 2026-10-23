@@ -62,6 +62,9 @@
                 <div class="heading-actions">
                     <button class="button secondary" id="refreshBtn">↻ Refresh data</button>
                     <button class="button primary" id="exportBtn">⇩ Export report</button>
+                    <button class="button secondary" id="detailedExportBtn">
+    Export Investigation Details
+</button>
                 </div>
             </div>
 
@@ -96,6 +99,58 @@
                     <div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
                 </article>
             </section>
+            
+<section class="payment-exposure-section">
+    <div class="section-heading">
+        <div>
+            <div class="eyebrow">FINANCIAL ANALYTICS</div>
+            <h2>Supplier Payment Exposure</h2>
+            <p>Payment concentration across reviewed records</p>
+        </div>
+    </div>
+
+    <div class="payment-exposure-grid">
+        <article class="exposure-card">
+            <span>Total reviewed payments</span>
+            <h3 id="totalReviewedPayments">—</h3>
+        </article>
+
+        <article class="exposure-card">
+            <span>Top supplier</span>
+            <h3 id="topPaymentSupplier">Loading...</h3>
+            <p id="topSupplierPayment">—</p>
+        </article>
+
+        <article class="exposure-card">
+            <span>Top 5 supplier concentration</span>
+            <h3 id="topFiveShare">—</h3>
+            <p>Share of reviewed payment amount</p>
+        </article>
+    </div>
+
+    <div class="exposure-table-wrapper">
+        <h3>Supplier payment summary</h3>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Supplier</th>
+                        <th>Records</th>
+                        <th>Total payment</th>
+                        <th>Average payment</th>
+                        <th>Maximum payment</th>
+                        <th>Payment share</th>
+                    </tr>
+                </thead>
+                <tbody id="supplierPaymentTable">
+                    <tr>
+                        <td colspan="6">Loading supplier payment data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
 
             <section class="charts-grid">
                 <article class="panel chart-panel" id="suppliers">
@@ -121,8 +176,14 @@
 <select id="departmentFilter" aria-label="Filter by department">
     <option value="all">All departments</option>
 </select>
+<select id="priorityFilter" aria-label="Filter by risk priority">
+    <option value="all">All risk priorities</option>
+    <option value="High">High priority</option>
+    <option value="Medium">Medium priority</option>
+    <option value="Low">Low priority</option>
+</select>
 </div>
-                    <div class="table-scroll"><table><thead><tr><th>SUPPLIER</th><th>REVIEW GROUP</th><th>REPEATED ROWS</th><th>STATUS</th></tr></thead><tbody id="reviewTable"><tr><td colspan="4" class="empty-state">Loading report data…</td></tr></tbody></table></div>
+                    <div class="table-scroll"><table><thead><tr><th>SUPPLIER</th><th>REVIEW GROUP</th><th>REPEATED ROWS</th><th>STATUS</th><th>RISK PRIORITY</th></tr></thead><tbody id="reviewTable"><tr><td colspan="4" class="empty-state">Loading report data…</td></tr></tbody></table></div>
                     <div class="table-foot"><span>Flags indicate review priority, not confirmed fraud.</span><button id="showMore" class="text-button">Show all rows ↓</button></div>
                 </article>
 
