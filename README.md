@@ -93,3 +93,12 @@ This project is intended for analytical review and prioritization. Repeated reco
 **Saurabh Mishra**
 
 Data Analytics | Python | SQL | Flask | Dashboard Development
+## Copyright & Usage
+
+Copyright © 2026 Saurabh Mishra. All rights reserved.
+
+This repository is published publicly for portfolio review and evaluation purposes.
+
+No permission is granted to copy, modify, redistribute, or use the original project code, documentation, or project-created visual assets without prior written permission, except as permitted by applicable law.
+
+Third-party components remain subject to their respective licenses.
