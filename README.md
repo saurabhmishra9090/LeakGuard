@@ -72,12 +72,11 @@ LeakGuard/
 
 Example commands for Windows:
 
-```bat
 python -m venv .venv
-.venv\Scripts\activate
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install flask pandas
-python web_dashboard\app.py
-```
+python web_dashboard/app.py
 
 Open `http://127.0.0.1:5000` in your browser.
 
