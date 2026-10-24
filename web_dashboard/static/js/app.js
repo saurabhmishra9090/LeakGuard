@@ -92,14 +92,11 @@ async function loadDashboard() {
         const data = await response.json();
 
         state.data = data;
-        console.log("Dashboard data loaded:", data.review_records?.length);
-        console.log("Review records type:", Array.isArray(data.review_records));
-
         renderKPIs(data);
-        renderCharts(data);
-        renderTable(data);
-        renderSupplierPayments(data);
-        renderConnectionStatus(data);
+renderCharts(data);
+renderTable(data);
+renderSupplierPayments(data);
+renderConnectionStatus(data);
 
         const updated = $("#lastUpdated");
 
@@ -135,7 +132,7 @@ async function loadDashboard() {
                 "Connection failed. Check the server.";
         }
 
-        showToast("Dashboard data could not be loaded.");
+       showToast(`Dashboard load failed: ${error?.message || String(error)}`);
 
     } finally {
         if (refreshButton) {
@@ -460,8 +457,14 @@ function renderCharts(data) {
     }
         const paymentCanvas = $("#supplierPaymentExposureChart");
 
-    if (paymentCanvas) {
-        new Chart(paymentCanvas, {
+   if (paymentCanvas) {
+    const existingPaymentChart = Chart.getChart(paymentCanvas);
+
+    if (existingPaymentChart) {
+        existingPaymentChart.destroy();
+    }
+
+    new Chart(paymentCanvas, {
             type: "bar",
             data: {
                 labels: (data.supplier_payment_summary || [])
