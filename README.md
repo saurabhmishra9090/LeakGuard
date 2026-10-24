@@ -28,25 +28,32 @@ LeakGuard transforms payment records into actionable review insights. It highlig
 - SQLite
 - HTML, CSS, JavaScript
 - Chart.js
-
-## Project Structure
-
-```text
 LeakGuard/
 ├── data/
 ├── reports/
+├── screenshots/
+│   └── LeakGuard-Dashboard.png
 ├── sql/
 ├── src/
 ├── tests/
 ├── web_dashboard/
 │   ├── app.py
 │   ├── templates/
+│   │   └── index.html
 │   └── static/
+│       ├── css/
+│       │   └── styles.css
+│       ├── js/
+│       │   └── app.js
+│       └── IMAGES/
+│           ├── leakguard-logo.png
+│           └── leakguard-hero.png
 ├── main.py
 ├── summary.py
 ├── .gitignore
+├── LeakGuard.pbix
+├── summary.py
 └── README.md
-```
 
 ## Getting Started
 
