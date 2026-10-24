@@ -1,7 +1,9 @@
 # LeakGuard — Payment Integrity Radar
 
 A data analytics project designed to identify potential payment irregularities, analyze supplier payment concentration, and support investigation workflows using public procurement payment data.
+## Dashboard Preview
 
+![LeakGuard Dashboard](screenshots/LeakGuard-Dashboard.png)
 ## Overview
 
 LeakGuard transforms payment records into actionable review insights. It highlights repeated payment patterns and cross-department involvement so analysts can prioritize records for further validation.
