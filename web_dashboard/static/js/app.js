@@ -241,7 +241,19 @@ function renderSupplierPayments(data) {
             <td>${formatCurrency(supplier.total_payment)}</td>
             <td>${formatCurrency(supplier.average_payment)}</td>
             <td>${formatCurrency(supplier.maximum_payment)}</td>
-            <td>${Number(supplier.payment_share_pct || 0).toFixed(2)}%</td>
+           
+<td>
+    <div class="payment-share-cell">
+        <span>${Number(supplier.payment_share_pct || 0).toFixed(2)}%</span>
+        <div class="payment-share-track">
+            <div
+                class="payment-share-fill"
+                style="width: ${Math.min(100, Math.max(0, Number(supplier.payment_share_pct) || 0))}%"
+            ></div>
+        </div>
+    </div>
+</td>
+
         </tr>
     `).join("");
 }
