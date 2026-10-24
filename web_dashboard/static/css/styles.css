@@ -2226,3 +2226,32 @@ td {
 .exposure-table-wrapper tbody tr:hover .payment-share-fill {
     box-shadow: 0 0 9px rgba(245, 158, 11, 0.36);
 }
+/* Mobile investigation table improvements */
+@media (max-width: 600px) {
+    .table-scroll {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-scroll table {
+        min-width: 820px;
+    }
+
+    .table-scroll th,
+    .table-scroll td {
+        white-space: nowrap;
+    }
+
+    .table-scroll td textarea {
+        width: 120px;
+        min-width: 120px;
+        min-height: 56px;
+        box-sizing: border-box;
+    }
+
+    .table-scroll td .save-investigation-btn {
+        min-width: 80px;
+    }
+}
